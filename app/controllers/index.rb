@@ -24,14 +24,25 @@ get '/' do
 end
 
 post '/grandma' do
-  "Implement the /grandma route yourself.<br>Params: <code>#{params.inspect}</code>"
-  if params[:user_input] == params[:user_input].upcase
+  my_phrase = params[:user_input]
+  if (my_phrase == my_phrase.upcase) && my_phrase != ""
     @grandma = 'Yea, I heard ya!!!!'
-  else
+  elsif (my_phrase != my_phrase.upcase) && my_phrase != ""
     @grandma = 'Speak up asshole... :('
+  else
+    @grandma = nil;
   end
 
-  erb :index
+  if request.xhr?
+    # Cool, I'll send ya some JSON!
+    content_type :json
+    @grandma.to_json
+
+    # erb :index
+  else
+    # Nope? Well, that's fine. Have some HTML!
+    erb :index
+  end
 
   # redirect to("/?grandma=#{@grandma}")
 
